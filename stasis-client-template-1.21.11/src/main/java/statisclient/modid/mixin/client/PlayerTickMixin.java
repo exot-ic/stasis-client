@@ -1,8 +1,11 @@
 @Mixin(ClientPlayerEntity.class)
 public class PlayerTickMixin {
-    @Inject(at = @At("HEAD"), method = "tick")
-    private void onTick(CallbackInfo info) {
-        // Assuming you initialized your mod in a companion object or singleton
-        StasisClient.INSTANCE.getAutoTotem().onTick();
+@Inject(at = @At("HEAD"), method = "tick")
+private void onTick(CallbackInfo info) {
+    // This calls your Kotlin onTick function 20 times per second
+    StasisClient.INSTANCE.getAutoTotem().onTick();
+}
+
+
     }
 }
