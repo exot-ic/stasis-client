@@ -35,17 +35,34 @@ class ClickGuiScreen : Screen(Text.of("ClickGUI")) {
 
 // --- NEW CODE GOES BELOW THE SCREEN CLASS ---
 
-class Frame(val name: String, val x: Int, val y: Int) {
-    private val width = 100
-    private val height = 15
-    private var expandedModule: String? = null 
+fun render(context: DrawContext, mouseX: Int, mouseY: Int) {
+    // 1. Draw Category Header (Twilight Indigo)
+    context.fill(x, y, x + width, y + height, 0xFF363F59.toInt()) 
+    context.drawText(null, name, x + 5, y + 4, 0xFF8EA0C1.toInt(), false) // Slate Blue Text
 
-    fun render(context: DrawContext, mouseX: Int, mouseY: Int) {
-        // 1. Draw Category Header
-        context.fill(x, y, x + width, y + height, Color(60, 60, 240).rgb)
-        context.drawText(null, name, x + 5, y + 4, -1, false)
+    var currentY = y + height
+    
+    val module = StasisClient.INSTANCE.autoTotem
+    // Module is Shadow Grey if off, a slightly brighter Indigo if on
+    val moduleBgColor = if (module.enabled) 0xFF363F59.toInt() else 0xFF1F2433.toInt()
+    val textColor = if (module.enabled) -1 else 0xFF8EA0C1.toInt() // White if on, Slate if off
+    
+    // 2. Draw Module Button
+    context.fill(x, currentY, x + width, currentY + height, moduleBgColor)
+    context.drawText(null, "AutoTotem", x + 10, currentY + 4, textColor, false)
 
-        var currentY = y + height
+    // 3. Draw Settings (Shadow Grey background for contrast)
+    if (expandedModule == "AutoTotem") {
+        currentY += height
+        // Setting background
+        context.fill(x, currentY, x + width, currentY + (height * 3), 0xFF1F2433.toInt())
+        
+        // Setting Text (Slate Blue)
+        context.drawText(null, "> Health: ${module.healthThreshold.toInt()}", x + 15, currentY + 4, 0xFF8EA0C1.toInt(), false)
+        context.drawText(null, "> Delay: ${module.configDelay.toInt()}", x + 15, currentY + height + 4, 0xFF8EA0C1.toInt(), false)
+        context.drawText(null, "> Silent: ${module.silent}", x + 15, currentY + (height * 2) + 4, 0xFF8EA0C1.toInt(), false)
+    }
+}
         
         // 2. Reference the AutoTotem module from your main class
         val module = StasisClient.INSTANCE.autoTotem
