@@ -23,9 +23,17 @@ class Frame(val name: String, val x: Int, val y: Int) {
             currentY += height
         }
     }
-
-    fun handleClicked(mouseX: Double, mouseY: Double, button: Int) {
-        // Logic for toggling modules goes here
+        fun handleClicked(mouseX: Double, mouseY: Double, button: Int) {
+    // Basic bounding box check (Simplified)
+    // If mouse is over the "AutoTotem" button area:
+    
+    val module = StasisClient.INSTANCE.autoTotem
+    
+    if (button == 0) { // 0 is Left Click
+        module.enabled = !module.enabled // Toggles true/false
+        println("AutoTotem is now ${if (module.enabled) "ON" else "OFF"}")
+    }
+}
         // Check if mouseX/mouseY is within the bounds of a button
     }
 }
