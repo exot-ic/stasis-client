@@ -1,26 +1,21 @@
-package stasisclient.modid
+package statisclient.modid
 
 import net.fabricmc.api.ClientModInitializer
-import stasisclient.modid.features.AutoTotem
+import statisclient.modid.features.AutoTotem
 
-class StasisClient : ClientModInitializer {
-
-    // This companion object makes "INSTANCE" accessible from Java Mixins
+class StasisclientClient : ClientModInitializer {
+    
+    // This allows ClickGUI and Mixins to talk to your modules
     companion object {
-        lateinit var INSTANCE: StasisClient
+        lateinit var INSTANCE: StasisclientClient
     }
 
-    // Initialize your modules here
     val autoTotem = AutoTotem()
-    // val autoCrystal = AutoCrystal()
 
     override fun onInitializeClient() {
         INSTANCE = this
-        println("Stasis Client Initialized!")
-        
-        // This is also a great place to register your Keybinds
-        // as we discussed in the "Better Way" earlier.
     }
+}
 }
 	// Top of your Client class
 val mappingKey = KeyBindingHelper.registerKeyBinding(KeyBinding(
