@@ -1,3 +1,5 @@
+package statisclient.modid.mixin.client;
+
 @Mixin(ClientPlayerEntity.class)
 public class PlayerTickMixin {
 @Inject(at = @At("HEAD"), method = "tick")
