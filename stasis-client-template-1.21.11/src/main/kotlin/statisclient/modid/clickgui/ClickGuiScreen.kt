@@ -1,9 +1,9 @@
-package stasisclient.modid.clickgui // Updated to 'stasis'
+package statisclient.modid.clickgui // Keep 'statis' so the folder matches
 
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.text.Text
-import stasisclient.modid.StasisClient // Updated to 'stasis'
+import statisclient.modid.StasisClient 
 import java.awt.Color
 
 class ClickGuiScreen : Screen(Text.of("ClickGUI")) {
@@ -37,28 +37,34 @@ class Frame(val name: String, var x: Int, var y: Int) {
     private var expandedModule: String? = null 
 
     fun render(context: DrawContext, mouseX: Int, mouseY: Int) {
-        // Twilight Indigo: #363F59
-        context.fill(x, y, x + width, y + height, 0xFF363F59.toInt())
-        // Accessing textRenderer via the client instance
-        val textRenderer = net.minecraft.client.MinecraftClient.getInstance().textRenderer
-        context.drawText(textRenderer, name, x + 5, y + 4, 0xFF8EA0C1.toInt(), false)
+        // Colors from your palette
+        val headerColor = 0xFF363F59.toInt() // Twilight Indigo
+        val textColor = 0xFF8EA0C1.toInt()   // Slate Blue
+        val bgColor = 0xFF1F2433.toInt()    // Shadow Grey
+        
+        // 1. Header
+        context.fill(x, y, x + width, y + height, headerColor)
+        val tr = net.minecraft.client.MinecraftClient.getInstance().textRenderer
+        context.drawText(tr, name, x + 5, y + 4, textColor, false)
 
         var currentY = y + height
         
+        // 2. Module Toggle
         val module = StasisClient.INSTANCE.autoTotem
-        val moduleBg = if (module.enabled) 0xFF363F59.toInt() else 0xFF1F2433.toInt()
-        val textColor = if (module.enabled) -1 else 0xFF8EA0C1.toInt()
+        val moduleBg = if (module.enabled) headerColor else bgColor
+        val moduleText = if (module.enabled) -1 else textColor
         
         context.fill(x, currentY, x + width, currentY + height, moduleBg)
-        context.drawText(textRenderer, "AutoTotem", x + 10, currentY + 4, textColor, false)
+        context.drawText(tr, "AutoTotem", x + 10, currentY + 4, moduleText, false)
 
+        // 3. Settings
         if (expandedModule == "AutoTotem") {
             currentY += height
-            context.fill(x, currentY, x + width, currentY + (height * 3), 0xFF1F2433.toInt())
+            context.fill(x, currentY, x + width, currentY + (height * 3), bgColor)
             
-            context.drawText(textRenderer, "> Health: ${module.healthThreshold.toInt()}", x + 15, currentY + 4, 0xFF8EA0C1.toInt(), false)
-            context.drawText(textRenderer, "> Delay: ${module.configDelay.toInt()}", x + 15, currentY + height + 4, 0xFF8EA0C1.toInt(), false)
-            context.drawText(textRenderer, "> Silent: ${module.silent}", x + 15, currentY + (height * 2) + 4, 0xFF8EA0C1.toInt(), false)
+            context.drawText(tr, "> Health: ${module.healthThreshold.toInt()}", x + 15, currentY + 4, textColor, false)
+            context.drawText(tr, "> Delay: ${module.configDelay.toInt()}", x + 15, currentY + height + 4, textColor, false)
+            context.drawText(tr, "> Silent: ${module.silent}", x + 15, currentY + (height * 2) + 4, textColor, false)
         }
     }
 
