@@ -5,17 +5,15 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.Items
 import net.minecraft.screen.slot.SlotActionType
 import net.minecraft.util.Hand
-
 class AutoTotem {
-    private val mc = MinecraftClient.getInstance()
+    var enabled = false
+    var delayTicks = 0
     
-    // Settings (You can hook these up to a GUI later)
-    var enabled = true
-    var delayTicks = 0 // Current delay counter
-    var configDelay = 1 // Set this to 0 for "Instant", higher for slower
-    var healthThreshold = 10.0 // Pop totem if health is below this
-    var silent = true // If true, swaps without opening inventory UI
-
+    // Customisable Settings
+    var configDelay = 1.0  // Number of ticks to wait
+    var healthThreshold = 10.0 // Health to swap at
+    var silent = true
+}
     fun onTick() {
         val player = mc.player ?: return
         if (!enabled) return
