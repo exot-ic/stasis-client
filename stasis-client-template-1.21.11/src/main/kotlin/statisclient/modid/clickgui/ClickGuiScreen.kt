@@ -1,4 +1,4 @@
-package stasisclient.modid.clickgui
+package statisclient.modid.clickgui
 
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.screen.Screen
