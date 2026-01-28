@@ -1,15 +1,16 @@
-package statisclient.modid
+package statisclient.modid // folder name
 
-import net.fabricmc.api.ModInitializer
-import org.slf4j.LoggerFactory
+import net.fabricmc.api.ClientModInitializer
+import statisclient.modid.features.AutoTotem 
 
-object Stasisclient : ModInitializer {
-    private val logger = LoggerFactory.getLogger("stasis-client")
+class StasisClient : ClientModInitializer { // class name
+    companion object {
+        lateinit var INSTANCE: StasisClient
+    }
 
-	override fun onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
-		logger.info("Hello Fabric world!")
-	}
+    val autoTotem = AutoTotem()
+
+    override fun onInitializeClient() {
+        INSTANCE = this
+    }
 }
