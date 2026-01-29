@@ -1,11 +1,12 @@
-package stasisclient.modid // Updated to 'stasis'
+package statisclient.modid
 
 import net.fabricmc.api.ClientModInitializer
-import stasisclient.modid.features.AutoTotem // Updated to 'stasis'
+import statisclient.modid.features.AutoTotem
 
 class StasisClient : ClientModInitializer {
     
     companion object {
+        // This MUST be inside the companion object
         lateinit var INSTANCE: StasisClient
     }
 
