@@ -14,18 +14,14 @@
 	"license": "CC0-1.0",
 	"icon": "assets/stasis-client/icon.png",
 	"environment": "*",
-	"entrypoints": {
-		"main": [
-			{
-				"value": "statisclient.modid.Stasisclient",
-				"adapter": "kotlin"
-			}
-		],
-		"client": [
-			{
-				"value": "statisclient.modid.StasisclientClient",
-				"adapter": "kotlin"
-			}
+"entrypoints": {
+  "main": [
+    "statisclient.modid.Stasisclient"
+  ],
+  "client": [
+    "statisclient.modid.StasisClient"
+  ]
+}
 		]
 	},
 	"mixins": [
