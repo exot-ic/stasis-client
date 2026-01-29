@@ -10,5 +10,8 @@ jobs:
       with:
         java-version: '21'
         distribution: 'temurin'
-    - name: Build with Gradle
-      run: ./gradlew build
+  - name: Build with Gradle
+      run: |
+        cd stasis-client-template-1.21.11
+        chmod +x gradlew
+        ./gradlew build
