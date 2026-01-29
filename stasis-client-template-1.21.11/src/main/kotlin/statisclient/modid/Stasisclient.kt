@@ -1,9 +1,10 @@
-package statisclient.modid // folder name
+package statisclient.modid
 
 import net.fabricmc.api.ClientModInitializer
-import statisclient.modid.features.AutoTotem 
+import statisclient.modid.features.AutoTotem
 
-class StasisClient : ClientModInitializer { // class name
+class StasisClient : ClientModInitializer {
+    
     companion object {
         lateinit var INSTANCE: StasisClient
     }
