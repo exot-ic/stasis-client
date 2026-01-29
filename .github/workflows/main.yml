@@ -10,5 +10,9 @@ jobs:
       with:
         java-version: '21'
         distribution: 'temurin'
-    - name: Build with Gradle
-      run: ./gradlew build
+- name: Build with Gradle
+      # This tells GitHub to enter your folder before running the command
+      working-directory: stasis-client-template-1.21.11
+      run: |
+        chmod +x gradlew
+        ./gradlew build
