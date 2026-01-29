@@ -1,64 +1,54 @@
-package stasisclient.modid.features
+package statisclient.modid.features
 
 import net.minecraft.client.MinecraftClient
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.Items
 import net.minecraft.screen.slot.SlotActionType
 import net.minecraft.util.Hand
+
 class AutoTotem {
     var enabled = false
-    var delayTicks = 0
-    
-    // Customisable Settings
-    var configDelay = 1.0  // Number of ticks to wait
-    var healthThreshold = 10.0 // Health to swap at
-    var silent = true
-}
-    fun onTick() {
-        val player = mc.player ?: return
-        if (!enabled) return
+    var healthThreshold = 10.0
+    var configDelay = 2.0
+    var silent = false
+    private var delayTicks = 0
 
-        // 1. Check Delay
+    fun onTick() {
+        val mc = MinecraftClient.getInstance()
+        if (!enabled || mc.player == null) return
+
         if (delayTicks > 0) {
             delayTicks--
             return
         }
 
-        // 2. Check if we actually need a totem
-        val offhandItem = player.getStackInHand(Hand.OFF_HAND).item
-        if (offhandItem == Items.TOTEM_OF_UNDYING) return
+        val player = mc.player!!
+        // Check if already holding a totem
+        if (player.mainHandStack.item == Items.TOTEM_OF_UNDYING || player.offHandStack.item == Items.TOTEM_OF_UNDYING) return
 
-        // 3. Find Totem in Inventory
-        val totemSlot = findTotemSlot()
-        
-        if (totemSlot != -1) {
-            swapToOffhand(totemSlot)
-            delayTicks = configDelay
+        if (player.health <= healthThreshold) {
+            val totemSlot = findTotem(player.inventory)
+            if (totemSlot != -1) {
+                moveTotemToOffhand(mc, totemSlot)
+                delayTicks = configDelay.toInt()
+            }
         }
     }
 
-    private fun findTotemSlot(): Int {
-        val inv = mc.player?.inventory ?: return -1
-        // Check main inventory (slots 9-44)
+    private fun findTotem(inventory: PlayerInventory): Int {
         for (i in 0..44) {
-            if (inv.getStack(i).item == Items.TOTEM_OF_UNDYING) {
-                // Adjusting slot indices for ScreenHandler
-                return if (i < 9) i + 36 else i
-            }
+            if (inventory.getStack(i).item == Items.TOTEM_OF_UNDYING) return i
         }
         return -1
     }
 
-    private fun swapToOffhand(slot: Int) {
-        val interactionManager = mc.interactionManager ?: return
-        val player = mc.player ?: return
-
-        // Slot 45 is the fixed ID for the offhand slot
-        // 1. Pick up the totem
-        interactionManager.clickSlot(player.playerScreenHandler.syncId, slot, 0, SlotActionType.PICKUP, player)
-        // 2. Click the offhand slot
-        interactionManager.clickSlot(player.playerScreenHandler.syncId, 45, 0, SlotActionType.PICKUP, player)
-        // 3. Put whatever was in offhand back into the old slot (Double Handing)
-        interactionManager.clickSlot(player.playerScreenHandler.syncId, slot, 0, SlotActionType.PICKUP, player)
+    private fun moveTotemToOffhand(mc: MinecraftClient, slot: Int) {
+        val syncId = mc.player!!.playerScreenHandler.syncId
+        // Minecraft inventory slot math: 
+        val fixedSlot = if (slot < 9) slot + 36 else slot
+        
+        mc.interactionManager?.clickSlot(syncId, fixedSlot, 0, SlotActionType.PICKUP, mc.player)
+        mc.interactionManager?.clickSlot(syncId, 45, 0, SlotActionType.PICKUP, mc.player)
+        mc.interactionManager?.clickSlot(syncId, fixedSlot, 0, SlotActionType.PICKUP, mc.player)
     }
 }
