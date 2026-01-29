@@ -5,7 +5,6 @@ import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.text.Text
 import statisclient.modid.StasisClient
-import java.awt.Color
 
 class ClickGuiScreen : Screen(Text.of("ClickGUI")) {
     private val frames = mutableListOf<Frame>()
@@ -38,58 +37,29 @@ class Frame(val name: String, var x: Int, var y: Int) {
     private var expandedModule: String? = null 
 
     fun render(context: DrawContext, mouseX: Int, mouseY: Int) {
-        val mc = MinecraftClient.getInstance()
-        val tr = mc.textRenderer
-        
-        // Colors
-        val headerColor = 0xFF363F59.toInt()
-        val textColor = 0xFF8EA0C1.toInt()
-        val bgColor = 0xFF1F2433.toInt()
-        
-        // 1. Header
-        context.fill(x, y, x + width, y + height, headerColor)
-        context.drawText(tr, name, x + 5, y + 4, textColor, false)
+        val tr = MinecraftClient.getInstance().textRenderer
+        context.fill(x, y, x + width, y + height, 0xFF363F59.toInt())
+        context.drawText(tr, name, x + 5, y + 4, 0xFF8EA0C1.toInt(), false)
 
         var currentY = y + height
-        
-        // 2. Module
         val module = StasisClient.INSTANCE.autoTotem
-        val moduleBg = if (module.enabled) headerColor else bgColor
-        val moduleTextColor = if (module.enabled) -1 else textColor
         
+        val moduleBg = if (module.enabled) 0xFF363F59.toInt() else 0xFF1F2433.toInt()
         context.fill(x, currentY, x + width, currentY + height, moduleBg)
-        context.drawText(tr, "AutoTotem", x + 10, currentY + 4, moduleTextColor, false)
+        context.drawText(tr, "AutoTotem", x + 10, currentY + 4, -1, false)
 
-        // 3. Settings
         if (expandedModule == "AutoTotem") {
             currentY += height
-            context.fill(x, currentY, x + width, currentY + (height * 3), bgColor)
-            
-            context.drawText(tr, "> Health: ${module.healthThreshold.toInt()}", x + 15, currentY + 4, textColor, false)
-            context.drawText(tr, "> Delay: ${module.configDelay.toInt()}", x + 15, currentY + height + 4, textColor, false)
-            context.drawText(tr, "> Silent: ${module.silent}", x + 15, currentY + (height * 2) + 4, textColor, false)
+            context.fill(x, currentY, x + width, currentY + (height * 3), 0xFF1F2433.toInt())
+            context.drawText(tr, "> Health: ${module.healthThreshold.toInt()}", x + 15, currentY + 4, 0xFF8EA0C1.toInt(), false)
         }
     }
 
     fun handleClicked(mouseX: Double, mouseY: Double, button: Int) {
         val module = StasisClient.INSTANCE.autoTotem
-        val moduleY = y + height
-
-        if (mouseX >= x && mouseX <= x + width && mouseY >= moduleY && mouseY <= moduleY + height) {
+        if (mouseY >= y + height && mouseY <= y + height * 2) {
             if (button == 0) module.enabled = !module.enabled
-            if (button == 1) expandedModule = if (expandedModule == "AutoTotem") null else "AutoTotem"
-        }
-        
-        if (expandedModule == "AutoTotem") {
-            if (mouseY >= moduleY + height && mouseY <= moduleY + (height * 2)) {
-                module.healthThreshold = if (module.healthThreshold >= 20.0) 2.0 else module.healthThreshold + 2.0
-            }
-            if (mouseY >= moduleY + (height * 2) && mouseY <= moduleY + (height * 3)) {
-                module.configDelay = if (module.configDelay >= 10.0) 0.0 else module.configDelay + 1.0
-            }
-            if (mouseY >= moduleY + (height * 3) && mouseY <= moduleY + (height * 4)) {
-                module.silent = !module.silent
-            }
+            if (button == 1) expandedModule = if (expandedModule == null) "AutoTotem" else null
         }
     }
 }
