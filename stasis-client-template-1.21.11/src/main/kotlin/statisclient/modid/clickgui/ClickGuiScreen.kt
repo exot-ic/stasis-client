@@ -1,9 +1,10 @@
-package statisclient.modid.clickgui // Keep 'statis' so the folder matches
+package statisclient.modid.clickgui
 
+import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.text.Text
-import statisclient.modid.StasisClient 
+import statisclient.modid.StasisClient
 import java.awt.Color
 
 class ClickGuiScreen : Screen(Text.of("ClickGUI")) {
@@ -37,25 +38,27 @@ class Frame(val name: String, var x: Int, var y: Int) {
     private var expandedModule: String? = null 
 
     fun render(context: DrawContext, mouseX: Int, mouseY: Int) {
-        // Colors from your palette
-        val headerColor = 0xFF363F59.toInt() // Twilight Indigo
-        val textColor = 0xFF8EA0C1.toInt()   // Slate Blue
-        val bgColor = 0xFF1F2433.toInt()    // Shadow Grey
+        val mc = MinecraftClient.getInstance()
+        val tr = mc.textRenderer
+        
+        // Colors
+        val headerColor = 0xFF363F59.toInt()
+        val textColor = 0xFF8EA0C1.toInt()
+        val bgColor = 0xFF1F2433.toInt()
         
         // 1. Header
         context.fill(x, y, x + width, y + height, headerColor)
-        val tr = net.minecraft.client.MinecraftClient.getInstance().textRenderer
         context.drawText(tr, name, x + 5, y + 4, textColor, false)
 
         var currentY = y + height
         
-        // 2. Module Toggle
+        // 2. Module
         val module = StasisClient.INSTANCE.autoTotem
         val moduleBg = if (module.enabled) headerColor else bgColor
-        val moduleText = if (module.enabled) -1 else textColor
+        val moduleTextColor = if (module.enabled) -1 else textColor
         
         context.fill(x, currentY, x + width, currentY + height, moduleBg)
-        context.drawText(tr, "AutoTotem", x + 10, currentY + 4, moduleText, false)
+        context.drawText(tr, "AutoTotem", x + 10, currentY + 4, moduleTextColor, false)
 
         // 3. Settings
         if (expandedModule == "AutoTotem") {
